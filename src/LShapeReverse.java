@@ -3,10 +3,12 @@ import java.awt.Point;
 
 public class LShapeReverse extends Piece{
 
-	private static Point[] points = {new Point(-1,-1), new Point(-1,0), new Point(0,0), new Point(1,0)};
+	private static Point[] points = {};
 	
 	public LShapeReverse() {
 		super(Color.BLUE, points);
+		Point[] points = {new Point(-1,-1), new Point(-1,0), new Point(0,0), new Point(1,0)};
+		this.setPoints(points);
 	}
 	
 }
