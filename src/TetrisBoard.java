@@ -31,7 +31,9 @@ public class TetrisBoard extends JPanel {
 		this.setPreferredSize(new Dimension(PIECE_SIZE*10,PIECE_SIZE*22));	
 		this.boardBlocks = new Point[10][22];
 		this.pieceGenerator = new Random();
-		
+		Piece piece = PieceFactory.create(pieces[pieceGenerator.nextInt(pieces.length)]);
+		this.boardPieces.add(piece);
+		this.currentPiece = piece;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -62,6 +64,8 @@ public class TetrisBoard extends JPanel {
 			int newX = p.x+xDirection+ORIGIN_X;
 			int newY = p.y+yDirection+ORIGIN_Y;
 			if (newX < 0 || newX > 9 || newY > 21 || newY < 0) {
+				return;
+			} if (blockAt(newX, newY)) {
 				return;
 			}
 		
@@ -145,5 +149,10 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
+	public boolean blockAt(int x, int y) {
+		if (boardBlocks[x][y] == null) {
+			return false;
+		} return true;	
+	}
 	
 }
