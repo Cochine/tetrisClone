@@ -17,6 +17,9 @@ public class TetrisBoard extends JPanel {
 	private ArrayList<Piece> boardPieces = new ArrayList<Piece>();
 	private Piece currentPiece;
 	private Random pieceGenerator;
+	private final int ORIGIN_X = 0;
+	private final int ORIGIN_Y = 21;
+	private final int PIECE_SIZE = 40;
 	
 	public Piece getCurrentPiece() {
 		return currentPiece;
@@ -24,7 +27,7 @@ public class TetrisBoard extends JPanel {
 
 	public TetrisBoard() {
 		this.setBackground(Color.black);
-		this.setPreferredSize(new Dimension(500,800));	
+		this.setPreferredSize(new Dimension(PIECE_SIZE*10,PIECE_SIZE*22));	
 		this.pieceGenerator = new Random();
 		Piece piece = PieceFactory.create(pieces[pieceGenerator.nextInt(pieces.length)]);
 		this.boardPieces.add(piece);
@@ -39,9 +42,13 @@ public class TetrisBoard extends JPanel {
         for (Piece piece: boardPieces) {
 		    for (Point p: piece.getPoints()) {
 		        g2d.setColor(piece.getColor());
-		        g2d.fillRect((p.x+5)*50, (p.y+5)*50, 50, 50);
+		        g2d.fillRect((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
+		        g2d.setColor(piece.getColor().brighter());
+		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE);
+		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
 		        g2d.setColor(piece.getColor().darker());
-		        g2d.drawLine((p.x+5)*50, (p.y+5)*50+49, (p.x+5)*50+50-1, (p.y+5)*50+49);
+		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
 		        	
 		        }
         }

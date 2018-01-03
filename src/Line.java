@@ -7,7 +7,7 @@ public class Line extends Piece {
 	
 	public Line() {
 		super (Color.cyan, points);
-		Point[] points = {new Point(-1,0), new Point(0,0), new Point(1,0), new Point(2,0)};
+		Point[] points = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(3,0)};
 		this.setPoints(points);
 		
 	}

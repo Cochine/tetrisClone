@@ -7,7 +7,7 @@ public class T extends Piece {
 	
 	public T() {
 		super(Color.MAGENTA, points);
-		Point[] points = {new Point(0,0), new Point(-1,0), new Point(1,0), new Point(0,-1)};
+		Point[] points = {new Point(0,0), new Point(1,0), new Point(1,-1), new Point(2,0)};
 		this.setPoints(points);
 
 	}

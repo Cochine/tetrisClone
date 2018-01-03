@@ -7,7 +7,7 @@ public class LShape extends Piece{
 	
 	public LShape() {
 		super(Color.ORANGE, points);
-		Point[] points = {new Point(-1,0), new Point(0,0), new Point(1,0), new Point(1,-1)};
+		Point[] points = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(2,-1)};
 		this.setPoints(points);
 	}
 	
