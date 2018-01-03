@@ -17,8 +17,8 @@ public class TetrisBoard extends JPanel {
 	private ArrayList<Piece> boardPieces = new ArrayList<Piece>();
 	private Piece currentPiece;
 	private Random pieceGenerator;
-	private final int ORIGIN_X = 0;
-	private final int ORIGIN_Y = 21;
+	private final int ORIGIN_X = 4;
+	private final int ORIGIN_Y = 5;
 	private final int PIECE_SIZE = 40;
 	
 	public Piece getCurrentPiece() {
@@ -58,10 +58,30 @@ public class TetrisBoard extends JPanel {
 	}
 	
 	public void move(int xDirection, int yDirection) {
+		
 		for (Point p: currentPiece.getPoints()) {
 			p.setLocation(p.getX()+xDirection, p.getY()+yDirection);
 			repaint();
 		}
+	}
+	
+	public void rotate() {
+		
+		if (currentPiece.getClass() != Square.class) {
+			for (int i = 0; i < 4; i++) {
+				Point point = currentPiece.getPoints()[i];
+				Point origin = currentPiece.getOrigin()[i];
+				int newx = point.x - origin.x;
+				int newy = point.y - origin.y;
+				point.setLocation(origin);
+				point.setLocation(point.y, -point.x);
+				origin.setLocation(point);
+				point.setLocation(point.x+newx, point.y+newy);
+			}
+		}
+		
+		repaint();
+		
 	}
 	
 	public void newPiece() {

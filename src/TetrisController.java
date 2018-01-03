@@ -26,6 +26,8 @@ public class TetrisController implements KeyListener {
 			
 		} if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			board.newPiece();
+		} if (e.getKeyCode() == KeyEvent.VK_D) {
+			board.rotate();
 		}
 		
 		
