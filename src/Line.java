@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Arrays;
 
 public class Line extends Piece {
 

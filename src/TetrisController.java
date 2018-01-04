@@ -13,19 +13,19 @@ public class TetrisController implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			board.move(-1,0);
+			board.movePiece(-1,0);
 			
 		} if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			board.move(1,0);
+			board.movePiece(1, 0);
 			
 		} if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			board.move(0, 1);
+			board.dropDown();
 			
 		} if (e.getKeyCode() == KeyEvent.VK_UP) {
-			board.move(0, -1);
+			board.movePiece(0, -1);
 			
 		} if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			board.newPiece();
+			board.quickDrop();
 		} if (e.getKeyCode() == KeyEvent.VK_Z) {
 			board.rotateLeft();
 		} if (e.getKeyCode() == KeyEvent.VK_X) {

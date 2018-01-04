@@ -2,12 +2,9 @@ import javax.swing.SwingUtilities;
 
 public class Tetris {
 	
-	private TetrisBoard board;
-	private TetrisGUI gui;
-	
 	public Tetris() {
-		this.board = new TetrisBoard();
-		this.gui = new TetrisGUI();
+		new TetrisBoard();
+		new TetrisGUI();
 	}
 	
 	

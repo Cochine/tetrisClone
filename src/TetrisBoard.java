@@ -3,8 +3,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,7 +17,7 @@ public class TetrisBoard extends JPanel {
 	private Piece currentPiece;
 	private Random pieceGenerator;
 	private final int ORIGIN_X = 4;
-	private final int ORIGIN_Y = 5;
+	private final int ORIGIN_Y = 1;
 	private final int PIECE_SIZE = 40;
 	
 	public Piece getCurrentPiece() {
@@ -58,15 +56,15 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
-	public void move(int xDirection, int yDirection) {
+	public boolean movePiece(int xDirection, int yDirection) {
 		
 		for (Point p: currentPiece.getPoints()) {
 			int newX = p.x+xDirection+ORIGIN_X;
 			int newY = p.y+yDirection+ORIGIN_Y;
 			if (newX < 0 || newX > 9 || newY > 21 || newY < 0) {
-				return;
+				return false;
 			} if (blockAt(newX, newY)) {
-				return;
+				return false;
 			}
 		
 		}
@@ -76,13 +74,37 @@ public class TetrisBoard extends JPanel {
 		}
 		
 		repaint();
-		return;
+		return true;
 		
+	}
+	
+	public boolean dropDown() {
+		if (!movePiece(0,1)) {
+			piecePlaced();
+			return true;
+		} return false;
+		
+	}
+	
+	public void quickDrop() {
+		while(!dropDown()) {}
 	}
 	
 	public void rotateLeft() {
 		
 		if (currentPiece.getClass() != Square.class) {
+			for (int i = 0; i < 4; i++) {
+				Point point = currentPiece.getPoints()[i];
+				Point origin = currentPiece.getOrigin()[i];
+				int newx = point.x - origin.x;
+				int newy = point.y - origin.y;
+				if (origin.y+newx+ORIGIN_X < 0 || origin.y+newx+ORIGIN_X > 9 || -origin.x+newy+ORIGIN_Y > 21 || -origin.x+newy+ORIGIN_Y < 0) {
+					return;
+				} if (blockAt(origin.y+newx+ORIGIN_X, -origin.x+newy+ORIGIN_Y)) {
+					return;
+				}
+			}
+			
 			for (int i = 0; i < 4; i++) {
 				Point point = currentPiece.getPoints()[i];
 				Point origin = currentPiece.getOrigin()[i];
@@ -107,11 +129,24 @@ public class TetrisBoard extends JPanel {
 				Point origin = currentPiece.getOrigin()[i];
 				int newx = point.x - origin.x;
 				int newy = point.y - origin.y;
+				if (-origin.y+newx+ORIGIN_X < 0 || -origin.y+newx+ORIGIN_X > 9 || origin.x+newy+ORIGIN_Y > 21 || origin.x+newy+ORIGIN_Y < 0) {
+					return;
+				} if (blockAt(-origin.y+newx+ORIGIN_X, origin.x+newy+ORIGIN_Y)) {
+					return;
+				}
+			}
+			
+			for (int i = 0; i <4; i++) {
+				Point point = currentPiece.getPoints()[i];
+				Point origin = currentPiece.getOrigin()[i];
+				int newx = point.x - origin.x;
+				int newy = point.y - origin.y;
 				point.setLocation(origin);
 				point.setLocation(-point.y, point.x);
 				origin.setLocation(point);
 				point.setLocation(point.x+newx, point.y+newy);
 			}
+			
 		}
 		
 		repaint();
@@ -145,7 +180,6 @@ public class TetrisBoard extends JPanel {
 		}
 		
 		this.newPiece();
-		System.out.println(this.boardBlocks[0][21]);
 		
 	}
 	
