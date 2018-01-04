@@ -1,16 +1,15 @@
 import java.awt.Color;
-import java.awt.Point;
 
 public class Line extends Piece {
 
-	private static Point[] points = {};
-	private static Point[] origin;
+	private static Block[] Blocks = {};
+	private static Block[] origin;
 	
 	public Line() {
-		super (Color.cyan, points, origin);
-		Point[] points = {new Point(-1,0), new Point(0,0), new Point(1,0), new Point(2,0)};
-		Point[] origin = {new Point(-1,0), new Point(0,0), new Point(1,0), new Point(2,0)};
-		this.setPoints(points);
+		super (Color.cyan, Blocks, origin);
+		Block[] Blocks = {new Block(-1,0), new Block(0,0), new Block(1,0), new Block(2,0)};
+		Block[] origin = {new Block(-1,0), new Block(0,0), new Block(1,0), new Block(2,0)};
+		this.setBlocks(Blocks);
 		this.setOrigin(origin);
 	}
 	

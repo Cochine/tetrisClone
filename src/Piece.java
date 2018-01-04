@@ -1,27 +1,26 @@
 import java.awt.Color;
-import java.awt.Point;
 
 public abstract class Piece {
 	
 	private Color color;
-	private Point points[];
-	private Point origin[];
+	private Block Blocks[];
+	private Block origin[];
 
-	public Point[] getOrigin() {
+	public Block[] getOrigin() {
 		return origin;
 	}
 
-	public void setOrigin(Point[] origin) {
+	public void setOrigin(Block[] origin) {
 		this.origin = origin;
 	}
 
-	public void setPoints(Point[] points) {
-		this.points = points;
+	public void setBlocks(Block[] Blocks) {
+		this.Blocks = Blocks;
 	}
 
-	public Piece(Color color, Point[] points, Point[] origin) {
+	public Piece(Color color, Block[] Blocks, Block[] origin) {
 		this.color = color;
-		this.points = points;
+		this.Blocks = Blocks;
 		this.origin = origin;
 		
 	}
@@ -31,8 +30,8 @@ public abstract class Piece {
 		return color;
 	}
 	
-	public Point[] getPoints() {
-		return points;
+	public Block[] getBlocks() {
+		return Blocks;
 	}
 	
 }

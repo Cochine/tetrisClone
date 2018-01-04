@@ -12,8 +12,7 @@ import javax.swing.JPanel;
 public class TetrisBoard extends JPanel {
 	
 	private String[] pieces = {"Line", "T", "Square", "LShape", "LShapeReverse", "ZShape", "ZShapeReverse"};
-	private ArrayList<Piece> boardPieces = new ArrayList<Piece>();
-	private Point[][] boardBlocks;
+	private Block[][] boardBlocks;
 	private Piece currentPiece;
 	private Random pieceGenerator;
 	private final int ORIGIN_X = 4;
@@ -27,10 +26,9 @@ public class TetrisBoard extends JPanel {
 	public TetrisBoard() {
 		this.setBackground(Color.black);
 		this.setPreferredSize(new Dimension(PIECE_SIZE*10,PIECE_SIZE*22));	
-		this.boardBlocks = new Point[10][22];
+		this.boardBlocks = new Block[22][10];
 		this.pieceGenerator = new Random();
 		Piece piece = PieceFactory.create(pieces[pieceGenerator.nextInt(pieces.length)]);
-		this.boardPieces.add(piece);
 		this.currentPiece = piece;
 	}
 
@@ -38,27 +36,41 @@ public class TetrisBoard extends JPanel {
         super.paintComponent(g); 
         Graphics2D g2d = (Graphics2D) g; 
  
-        for (Piece piece: boardPieces) {
-		    for (Point p: piece.getPoints()) {
-		        g2d.setColor(piece.getColor());
-		        g2d.fillRect((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
-		        g2d.setColor(piece.getColor().brighter());
-		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE);
-		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
-		        g2d.setColor(piece.getColor().darker());
-		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
-		        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
-		        	
-		        }
-        }
-	        
+
+		for (Block p: currentPiece.getBlocks()) {
+			g2d.setColor(currentPiece.getColor());
+	        g2d.fillRect((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
+	        g2d.setColor(currentPiece.getColor().brighter());
+	        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE);
+	        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+	        g2d.setColor(currentPiece.getColor().darker());
+	        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+	        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+	    }
+		
+		for (int i = 0;  i < boardBlocks.length; i++) {
+			for (Block block: boardBlocks[i]) {
+				if (block != null) {
+					g2d.setColor(block.getColor());
+			        g2d.fillRect((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
+			        g2d.setColor(block.getColor().brighter());
+			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE);
+			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+			        g2d.setColor(block.getColor().darker());
+			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+				}
+				
+			}
+		}
+        
 		g2d.dispose();
 		
 	}
 	
 	public boolean movePiece(int xDirection, int yDirection) {
 		
-		for (Point p: currentPiece.getPoints()) {
+		for (Block p: currentPiece.getBlocks()) {
 			int newX = p.x+xDirection+ORIGIN_X;
 			int newY = p.y+yDirection+ORIGIN_Y;
 			if (newX < 0 || newX > 9 || newY > 21 || newY < 0) {
@@ -69,7 +81,7 @@ public class TetrisBoard extends JPanel {
 		
 		}
 		
-		for (Point p: currentPiece.getPoints()) {
+		for (Point p: currentPiece.getBlocks()) {
 			p.setLocation(p.getX()+xDirection, p.getY()+yDirection);	
 		}
 		
@@ -94,7 +106,7 @@ public class TetrisBoard extends JPanel {
 		
 		if (currentPiece.getClass() != Square.class) {
 			for (int i = 0; i < 4; i++) {
-				Point point = currentPiece.getPoints()[i];
+				Point point = currentPiece.getBlocks()[i];
 				Point origin = currentPiece.getOrigin()[i];
 				int newx = point.x - origin.x;
 				int newy = point.y - origin.y;
@@ -106,7 +118,7 @@ public class TetrisBoard extends JPanel {
 			}
 			
 			for (int i = 0; i < 4; i++) {
-				Point point = currentPiece.getPoints()[i];
+				Point point = currentPiece.getBlocks()[i];
 				Point origin = currentPiece.getOrigin()[i];
 				int newx = point.x - origin.x;
 				int newy = point.y - origin.y;
@@ -125,7 +137,7 @@ public class TetrisBoard extends JPanel {
 		
 		if (currentPiece.getClass() != Square.class) {
 			for (int i = 0; i < 4; i++) {
-				Point point = currentPiece.getPoints()[i];
+				Point point = currentPiece.getBlocks()[i];
 				Point origin = currentPiece.getOrigin()[i];
 				int newx = point.x - origin.x;
 				int newy = point.y - origin.y;
@@ -137,7 +149,7 @@ public class TetrisBoard extends JPanel {
 			}
 			
 			for (int i = 0; i <4; i++) {
-				Point point = currentPiece.getPoints()[i];
+				Point point = currentPiece.getBlocks()[i];
 				Point origin = currentPiece.getOrigin()[i];
 				int newx = point.x - origin.x;
 				int newy = point.y - origin.y;
@@ -153,40 +165,61 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
-	public void info() {
-		for (int i = 0; i < boardBlocks.length; i ++) {
-			for (int x = 0; x < boardBlocks[i].length; x++) {
-				if (boardBlocks[i][x] != null) {
-					System.out.println(boardBlocks[i][x]);
-				}
-			}
-		}
-	}
-	
 	public void newPiece() {
 		Piece piece = PieceFactory.create(pieces[pieceGenerator.nextInt(pieces.length)]);
-		this.boardPieces.add(piece);
 		this.currentPiece = piece;
 		repaint();
 		
 	}
 	
 	public void piecePlaced() {
-		for (Point p: currentPiece.getPoints()) {
+		for (Block p: currentPiece.getBlocks()) {
 			int x = p.x + ORIGIN_X;
 			int y = p.y + ORIGIN_Y;
-			this.boardBlocks[x][y] = p;
+			p.setColor(currentPiece.getColor());
+			this.boardBlocks[y][x] = p;
 			
 		}
-		
+		clearLines();
 		this.newPiece();
 		
 	}
 	
 	public boolean blockAt(int x, int y) {
-		if (boardBlocks[x][y] == null) {
+		if (boardBlocks[y][x] == null) {
 			return false;
 		} return true;	
 	}
 	
+	public void clearLines() {
+		
+		for (int i = 0; i < boardBlocks.length; i ++) {
+			
+			boolean fullLine = true;
+			
+			for (int j = 0; j < boardBlocks[i].length; j++) {
+				if(boardBlocks[i][j] == null) {
+					fullLine = false;
+					break;
+				}
+			}
+			
+			//System.out.println(fullLine);
+			
+			if (fullLine) {
+				for (int j = i; j > 0; j--) {
+					for (int k = 0; k < boardBlocks[j].length; k++) {
+						this.boardBlocks[i][k] = null;
+						repaint();
+						
+					}
+				}
+						
+			}
+			
+		}
+		
+		
+		
+	}
 }

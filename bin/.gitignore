@@ -12,3 +12,6 @@
 /TetrisGUI.class
 /ZShape.class
 /ZShapeReverse.class
+/Point.class
+/PiecePoint.class
+/Block.class

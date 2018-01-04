@@ -1,16 +1,15 @@
 import java.awt.Color;
-import java.awt.Point;
 
 public class LShapeReverse extends Piece{
 
-	private static Point[] points = {};
-	private static Point[] origin;
+	private static Block[] Blocks = {};
+	private static Block[] origin;
 	
 	public LShapeReverse() {
-		super(Color.BLUE, points, origin);
-		Point[] points = {new Point(-1,-1), new Point(-1,0), new Point(0,0), new Point(1,0)};
-		Point[] origin = {new Point(-1,-1), new Point(-1,0), new Point(0,0), new Point(1,0)};
-		this.setPoints(points);
+		super(Color.BLUE, Blocks, origin);
+		Block[] Blocks = {new Block(-1,-1), new Block(-1,0), new Block(0,0), new Block(1,0)};
+		Block[] origin = {new Block(-1,-1), new Block(-1,0), new Block(0,0), new Block(1,0)};
+		this.setBlocks(Blocks);
 		this.setOrigin(origin);
 
 	}
