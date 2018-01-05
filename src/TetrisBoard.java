@@ -18,6 +18,8 @@ public class TetrisBoard extends JPanel {
 	private final int ORIGIN_X = 4;
 	private final int ORIGIN_Y = 1;
 	private final int PIECE_SIZE = 40;
+	private final int BOARD_WIDTH = 10;
+	private final int BOARD_HEIGHT = 22;
 	
 	public Piece getCurrentPiece() {
 		return currentPiece;
@@ -25,8 +27,8 @@ public class TetrisBoard extends JPanel {
 
 	public TetrisBoard() {
 		this.setBackground(Color.black);
-		this.setPreferredSize(new Dimension(PIECE_SIZE*10,PIECE_SIZE*22));	
-		this.boardBlocks = new Block[22][10];
+		this.setPreferredSize(new Dimension(PIECE_SIZE*BOARD_WIDTH,PIECE_SIZE*BOARD_HEIGHT));	
+		this.boardBlocks = new Block[BOARD_HEIGHT][BOARD_WIDTH];
 		this.pieceGenerator = new Random();
 		Piece piece = PieceFactory.create(pieces[pieceGenerator.nextInt(pieces.length)]);
 		this.currentPiece = piece;
@@ -48,22 +50,22 @@ public class TetrisBoard extends JPanel {
 	        g2d.drawLine((p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE, (p.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (p.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
 	    }
 		
-		for (int i = 0;  i < boardBlocks.length; i++) {
-			for (Block block: boardBlocks[i]) {
-				if (block != null) {
-					g2d.setColor(block.getColor());
-			        g2d.fillRect((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
-			        g2d.setColor(block.getColor().brighter());
-			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE);
-			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
-			        g2d.setColor(block.getColor().darker());
-			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
-			        g2d.drawLine((block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE, (block.x + ORIGIN_X)*PIECE_SIZE+PIECE_SIZE-1, (block.y + ORIGIN_Y)*PIECE_SIZE+PIECE_SIZE-1);
+		for (int i = 0;  i < BOARD_HEIGHT; i++) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
+				if (boardBlocks[i][j] != null) {
+					g2d.setColor(boardBlocks[i][j].getColor());
+			        g2d.fillRect((j)*PIECE_SIZE, (i)*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
+			        g2d.setColor(boardBlocks[i][j].getColor().brighter());
+			        g2d.drawLine((j)*PIECE_SIZE, (i)*PIECE_SIZE, (j)*PIECE_SIZE+PIECE_SIZE-1, (i)*PIECE_SIZE);
+			        g2d.drawLine((j)*PIECE_SIZE, (i)*PIECE_SIZE, (j)*PIECE_SIZE, (i)*PIECE_SIZE+PIECE_SIZE-1);
+			        g2d.setColor(boardBlocks[i][j].getColor().darker());
+			        g2d.drawLine((j)*PIECE_SIZE, (i)*PIECE_SIZE+PIECE_SIZE-1, (j)*PIECE_SIZE+PIECE_SIZE-1, (i)*PIECE_SIZE+PIECE_SIZE-1);
+			        g2d.drawLine((j)*PIECE_SIZE+PIECE_SIZE-1, (i)*PIECE_SIZE, (j)*PIECE_SIZE+PIECE_SIZE-1, (i)*PIECE_SIZE+PIECE_SIZE-1);
 				}
 				
 			}
 		}
-        
+		
 		g2d.dispose();
 		
 	}
@@ -193,33 +195,34 @@ public class TetrisBoard extends JPanel {
 	
 	public void clearLines() {
 		
-		for (int i = 0; i < boardBlocks.length; i ++) {
+		for (int i = 0; i < BOARD_HEIGHT; i++ ) {
 			
 			boolean fullLine = true;
 			
-			for (int j = 0; j < boardBlocks[i].length; j++) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
 				if(boardBlocks[i][j] == null) {
 					fullLine = false;
 					break;
 				}
 			}
-			
-			//System.out.println(fullLine);
-			
+
 			if (fullLine) {
-				for (int j = i; j > 0; j--) {
-					for (int k = 0; k < boardBlocks[j].length; k++) {
-						this.boardBlocks[i][k] = null;
-						repaint();
-						
+				for (int j = i; j >= 1; j -- ) {
+					for (int k = 0; k < BOARD_WIDTH; k++) {
+						boardBlocks[j][k] = boardBlocks[j-1][k];
 					}
 				}
-						
+				
 			}
 			
 		}
 		
-		
-		
+		repaint();
+	}
+	
+	public void clearBoard() {
+		this.boardBlocks = new Block[22][10];
+		newPiece();
+		repaint();
 	}
 }
